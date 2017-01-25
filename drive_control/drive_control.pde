@@ -1,7 +1,7 @@
-HScrollbar hs1, hs2, hs3;  // Two scrollbars
+HScrollbar hs1, hs2, hs3;  // Three scrollbars
 Graph g; // object with graph of input values; (whole width)
 Param[] prm; //object with params to show, record calculate
-// PImage img1, img2;  // Two images to load
+
 //http://pastebin.com/kSrU3nVH - here graph can be taken
 PFont f;
 
@@ -10,16 +10,17 @@ void setup() {
   f = createFont("Arial",16,true); 
   noStroke();
    background(255);
-  prm = new Param[2];
+  prm = new Param[3];
   
   hs1 = new HScrollbar(0, height/2-8, width, 16, 16, false, 255);
-  hs2 = new HScrollbar(0, height/2+8, width, 16, 16, true, 255);
+  hs2 = new HScrollbar(0, height/2+8, width, 16, 16, false, 255);
   hs3 = new HScrollbar(0, height/2+24, width, 16,16, false, 255);
   int yMin_g = round(height/2+30);
-  g = new Graph(yMin_g, yMin_g+255, 0, 255, false, 1024); //new graph   
-  // Load images
- // img1 = loadImage("seedTop.jpg");
-  //img2 = loadImage("seedBottom.jpg");
+  g = new Graph(yMin_g, height, color(0), color(255), false, 255); //new graph   
+  
+  prm[0] = new Param("Pump", color(255, 0, 0));
+  prm[1] = new Param("Linear", color(0, 255, 0));
+  prm[2] = new Param("Motor", color(0, 0, 255)); 
 }
 
 void draw() {
@@ -31,33 +32,44 @@ void draw() {
   hs1.display();
   hs2.display();
   hs3.display();
-  
+ 
+  prm[0].putValue(hs1.getValue());
+  prm[1].putValue(hs2.getValue());
+  prm[2].putValue(hs3.getValue());
   g.display();
-  
+  noSmooth();
+  for(int i = 0; i<3; i++) //three points of it...
+      { stroke(prm[i].clr);
+        point(g.position-1, g.getY(prm[i].value)); }
+      
   textAlign(CENTER);
+  stroke(255); //text with values - replace after update
   fill(255);
   rect(0, 40, width, 120);
   fill(0);
   text(hs1.getValue(),width/2,60);
   text(hs2.getValue(),width/2,80);
-  text(hs3.getValue(),width/2,100);
+  text(g.getY(prm[0].value),width/2,100);
   stroke(0);
   line(0, height/2, width, height/2);
   line(0, height/2+16, width, height/2+16);
+  
 }
 
-/* class Graph {
-    int position;
-    int MaxPosition;
-    int ;
-    int 
-} */ 
-
 class Param {
- String name;
- float value; 
- color clr; 
+  String name;
+  float value;
+  color clr; 
  
+  Param(String N, color C)
+     {
+       name = N;
+       clr = C;
+       }
+ void putValue(float v)
+   {
+     value = v;
+   }
 }
 
 class Graph {
@@ -91,7 +103,7 @@ class Graph {
          position++; 
       }
       
-     int getY(int value)
+     int getY(float value)
      {
        int res;
        if (maxValue == 0) return 0;
