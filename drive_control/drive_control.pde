@@ -1,15 +1,24 @@
+import processing.serial.*;
+
 HScrollbar hs1, hs2, hs3;  // Three scrollbars
 Graph g; // object with graph of input values; (whole width)
 Param[] prm; //object with params to show, record calculate
 
+Serial myPort;
+//possible to update scroll bar only when needed.. (only if last value not equal current one)
+// 2017-01-26 
 //http://pastebin.com/kSrU3nVH - here graph can be taken
 PFont f;
+
+int lf = 10;      // ASCII linefeed 
+String inString;  //communication in string...
 
 void setup() {
   size(640, 360);
   f = createFont("Arial",16,true); 
   noStroke();
-   background(255);
+  noSmooth();
+  background(255);
   prm = new Param[3];
   
   hs1 = new HScrollbar(0, height/2-8, width, 16, 16, false, 255);
@@ -21,7 +30,18 @@ void setup() {
   prm[0] = new Param("Pump", color(255, 0, 0));
   prm[1] = new Param("Linear", color(0, 255, 0));
   prm[2] = new Param("Motor", color(0, 0, 255)); 
+  
+ printArray(Serial.list());
+
+// Open the port you are using at the rate you want:
+   myPort = new Serial(this, Serial.list()[0], 9600);
+   myPort.bufferUntil(lf); 
 }
+
+void serialEvent(Serial p) {
+  //getting command from Arduino (feedBack, value of sensors, buttons events)
+  inString = p.readString(); 
+} 
 
 void draw() {
   fill(255);
@@ -37,7 +57,7 @@ void draw() {
   prm[1].putValue(hs2.getValue());
   prm[2].putValue(hs3.getValue());
   g.display();
-  noSmooth();
+  
   for(int i = 0; i<3; i++) //three points of it...
       { stroke(prm[i].clr);
         point(g.position-1, g.getY(prm[i].value)); }
