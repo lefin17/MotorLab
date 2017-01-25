@@ -25,7 +25,7 @@ void setup() {
   hs2 = new HScrollbar(0, height/2+8, width, 16, 16, false, 255);
   hs3 = new HScrollbar(0, height/2+24, width, 16,16, false, 255);
   int yMin_g = round(height/2+30);
-  g = new Graph(yMin_g, height, color(0), color(255), false, 255); //new graph   
+  g = new Graph(yMin_g, height, color(0), color(255), false, 1024); //new graph   
   
   prm[0] = new Param("Pump", color(255, 0, 0));
   prm[1] = new Param("Linear", color(0, 255, 0));
@@ -40,7 +40,17 @@ void setup() {
 
 void serialEvent(Serial p) {
   //getting command from Arduino (feedBack, value of sensors, buttons events)
-  inString = p.readString(); 
+  String s = p.readString();
+  s = trim(s);
+  switch(s.charAt(0))
+    {
+      case 'A': //read analog signal from sensors line
+        if (s.length()!=6) return;
+        int channel = s.charAt(1);
+        float value = float(s.charAt(2))*1000 + float(s.charAt(3))*100 + float(s.charAt(4))*10 + float(s.charAt(5));
+        if (channel<3) prm[channel].putValue(value); //put Value from sensor to model vars.
+        break;
+    }
 } 
 
 void draw() {
@@ -69,7 +79,7 @@ void draw() {
   fill(0);
   text(hs1.getValue(),width/2,60);
   text(hs2.getValue(),width/2,80);
-  text(g.getY(prm[0].value),width/2,100);
+  text(hs3.getValue(),width/2,100);
   stroke(0);
   line(0, height/2, width, height/2);
   line(0, height/2+16, width, height/2+16);
@@ -211,11 +221,6 @@ class HScrollbar {
     rect(spos, ypos, sheight, sheight);
   }
   
-//  char getCommand()
-  //  {
-      
-   // }
-    
   int getValue() {
     int res = 0;
     float v = getPos();
