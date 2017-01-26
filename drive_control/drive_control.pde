@@ -10,7 +10,7 @@ Serial myPort;
 //http://pastebin.com/kSrU3nVH - here graph can be taken
 PFont f;
 
-int lf = 10;      // ASCII linefeed 
+int lf = 13;      // ASCII linefeed 
 String inString;  //communication in string...
 
 void setup() {
@@ -42,13 +42,16 @@ void serialEvent(Serial p) {
   //getting command from Arduino (feedBack, value of sensors, buttons events)
   String s = p.readString();
   s = trim(s);
+  inString = "";
+  // println(s);
   switch(s.charAt(0))
     {
       case 'A': //read analog signal from sensors line
         if (s.length()!=6) return;
-        int channel = s.charAt(1);
-        float value = float(s.charAt(2))*1000 + float(s.charAt(3))*100 + float(s.charAt(4))*10 + float(s.charAt(5));
+        int channel = int(str(s.charAt(1)));
+        float value = float(str(s.charAt(2)))*1000 + float(str(s.charAt(3)))*100 + float(str(s.charAt(4)))*10 + float(str(s.charAt(5)));
         if (channel<3) prm[channel].putValue(value); //put Value from sensor to model vars.
+        inString = str(value);
         break;
     }
 } 
@@ -63,9 +66,9 @@ void draw() {
   hs2.display();
   hs3.display();
  
-  prm[0].putValue(hs1.getValue());
+ /* prm[0].putValue(hs1.getValue()); //graph controlled by horisontal scroll bar
   prm[1].putValue(hs2.getValue());
-  prm[2].putValue(hs3.getValue());
+  prm[2].putValue(hs3.getValue()); */
   g.display();
   
   for(int i = 0; i<3; i++) //three points of it...
@@ -77,7 +80,8 @@ void draw() {
   fill(255);
   rect(0, 40, width, 120);
   fill(0);
-  text(hs1.getValue(),width/2,60);
+  // text(hs1.getValue(),width/2,60);
+  text(inString, width/2,60);
   text(hs2.getValue(),width/2,80);
   text(hs3.getValue(),width/2,100);
   stroke(0);
