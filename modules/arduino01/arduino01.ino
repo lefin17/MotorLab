@@ -60,11 +60,11 @@ delay(2);
   Ms = analogRead(MsIn);
   
  //       Serial.println('Fhelp');
- // Serial.println("A0"+out(Ms));   
+ Serial.println("A0"+out(Ms));   
 
- // Serial.println("A1"+out(Ls));
+  Serial.println("A1"+out(Ls));
 
-//  Serial.println("A2"+out(Ps));
+   Serial.println("A2"+out(Ps));
     
   delay(2);                     
 }
@@ -127,6 +127,6 @@ void DirectControl(char command[6])
           { analogWrite(Pout2, LOW);  delay(2); analogWrite(Pout1, value); }
         if (dev == 'P' && command[1] == 'D')
           { analogWrite(Pout1, LOW);  delay(2); analogWrite(Pout2, value); }  
-        Serial.println("F-"+String(value));   
+     //   Serial.println("F-"+String(value));   
     // Serial.println("FV"+value);
   }

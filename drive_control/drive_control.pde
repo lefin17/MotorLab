@@ -63,7 +63,7 @@ void serialEvent(Serial p) {
         // int channel = int(str(s.charAt(1)));
         // float value = float(str(s.charAt(2)))*1000 + float(str(s.charAt(3)))*100 + float(str(s.charAt(4)))*10 + float(str(s.charAt(5)));
         // if (channel<3) prm[channel].putValue(value); //put Value from sensor to model vars.
-        inString = "Feed Back";
+        inString = "Feed Back "+s;
         break;
     }
 } 
@@ -94,7 +94,7 @@ void draw() {
   fill(0);
   // text(hs1.getValue(),width/2,60);
   text(commonCommand, width/2,60);
-  text("hi", width/2,80);
+  text(inString, width/2,80);
   text(hs3.getValue(),width/2,100);
   stroke(0);
   line(0, height/2, width, height/2);
