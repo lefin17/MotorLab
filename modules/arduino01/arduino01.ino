@@ -17,9 +17,9 @@ const int Mout1 = 9;
 const int Mout2 = 10; 
 
 const int Pout1 = 11; 
-const int Pout2 = 12;
+const int Pout2 = 6;
 
-const int Lout1 = 4; //check PWM possible connection
+const int Lout1 = 3; //check PWM possible connection
 const int Lout2 = 5; 
 
 String inputString;
@@ -39,6 +39,7 @@ void setup() {
   pinMode(Lout2, OUTPUT);
   pinMode(Pout2, OUTPUT);
   pinMode(Pout2, OUTPUT);
+  inputString = "";
 //  check if connection started in terminal mode
 }
 
@@ -58,12 +59,12 @@ delay(2);
 delay(2);
   Ms = analogRead(MsIn);
   
-  
-  Serial.println("A0"+out(Ms));   
+ //       Serial.println('Fhelp');
+ // Serial.println("A0"+out(Ms));   
 
-  Serial.println("A1"+out(Ls));
+ // Serial.println("A1"+out(Ls));
 
-  Serial.println("A2"+out(Ps));
+//  Serial.println("A2"+out(Ps));
     
   delay(2);                     
 }
@@ -73,23 +74,32 @@ void serialEvent() {
   char dev;
   int value;
   boolean stringComplete;
+  
+ // Serial.println("Fhello");
   while (Serial.available()) {
     stringComplete = false;
     // get the new byte:
     char inChar = (char)Serial.read();
     // add it to the inputString:
-    inputString += inChar;
+    if (inChar!='\n') inputString += inChar;
+    if (inputString.length()>10) inputString = "";
     // if the incoming character is a newline, set a flag
     // so the main loop can do something about it:
     if (inChar == '\n') {
       stringComplete = true;
     }
-    
+
     if (stringComplete)
       {
+        // inputString = trim(inputString);
+
         if (inputString.length()<2) continue;
+        if (inputString.length()>6) continue;
+           //    
+   
         //command recognizer 
         inputString.toCharArray(command, 6);
+        inputString = "";
         DirectControl(command);
       }
   }
@@ -99,21 +109,24 @@ void DirectControl(char command[6])
   {
   char dev;
   int value;
-         dev = command[0];
-        value = command[2]*100 + command[3]*10 + command[4];
-  //control devices with pairs       
-  //direct control by hydraulic amplifer 
+        dev = command[0];
+        value = String(command[2]).toInt()*100 + String(command[3]).toInt()*10 + String(command[4]).toInt();
+  
+  
+  if (value>254) return; 
+  if (value<0) return;
         if (dev == 'M' && command[1] =='U')
-           { analogWrite(Mout2, LOW); analogWrite(Mout1, value); }
+           { analogWrite(Mout2, LOW); delay(2); analogWrite(Mout1, value); }
         if (dev == 'M' && command[1] == 'D')    
-           { analogWrite(Mout1, LOW); analogWrite(Mout2, value); }
+           { analogWrite(Mout1, LOW); delay(2);  analogWrite(Mout2, value); }
         if (dev == 'L' && command[1] == 'U')
-          { analogWrite(Lout2, LOW); analogWrite(Lout1, value); }
+          { analogWrite(Lout2, LOW);  delay(2); analogWrite(Lout1, value); }
         if (dev == 'L' && command[1] == 'D')
-          { analogWrite(Lout1, LOW); analogWrite(Lout2, value); }
+          { analogWrite(Lout1, LOW);  delay(2); analogWrite(Lout2, value); }
         if (dev == 'P' && command[1] == 'U')
-          { analogWrite(Pout2, LOW); analogWrite(Pout1, value); }
+          { analogWrite(Pout2, LOW);  delay(2); analogWrite(Pout1, value); }
         if (dev == 'P' && command[1] == 'D')
-          { analogWrite(Pout1, LOW); analogWrite(Pout2, value); }  
-   
+          { analogWrite(Pout1, LOW);  delay(2); analogWrite(Pout2, value); }  
+        Serial.println("F-"+String(value));   
+    // Serial.println("FV"+value);
   }
