@@ -222,7 +222,7 @@ class HScrollbar {
          if (oldpos != spos) 
           {  
              tmp = getValue();
-             Direction = (tmp>=0) ? "U" : "D"; 
+             Direction = (tmp>=0) ? "U" : "D"; //Up & Down
              strValue = str(abs(tmp));
              while(strValue.length()<3) strValue = "0" + strValue; 
              command = str(channelName) + Direction + strValue + '\n';
@@ -260,8 +260,8 @@ class HScrollbar {
   int getValue() {
     int res = 0;
     float v = getPos();
-    if (simetrical) { res = round(-maxValue + v*2*maxValue/(sposMax-sposMin+sheight)); }
-    else res  = round(v*maxValue/(sposMax-sposMin+sheight));
+    res = (simetrical) ? round(-maxValue + v*2*maxValue/(sposMax-sposMin+sheight)) : 
+                         round(v*maxValue/(sposMax-sposMin+sheight)); // not simmetrical
     return res;
   }
 
