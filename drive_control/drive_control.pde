@@ -24,9 +24,9 @@ void setup() {
   inString = "";
   prm = new Param[3];
   
-  hs1 = new HScrollbar(0, height/2-8, width, 16, 16, false, 255, 'L');
-  hs2 = new HScrollbar(0, height/2+8, width, 16, 16, false, 255, 'M');
-  hs3 = new HScrollbar(0, height/2+24, width, 16,16, false, 255, 'P');
+  hs1 = new HScrollbar(0, height/2-8, width, 16, 16, true, 255, 'L');
+  hs2 = new HScrollbar(0, height/2+8, width, 16, 16, true, 255, 'M');
+  hs3 = new HScrollbar(0, height/2+24, width, 16,16, true, 255, 'P');
   int yMin_g = round(height/2+30);
   g = new Graph(yMin_g, height, color(0), color(255), false, 1024); //new graph   
   
@@ -197,6 +197,8 @@ class HScrollbar {
   void update() {
     String command = "";
     String  strValue = "";
+    String Direction = "";
+    int tmp;
     if (overEvent()) {
       over = true;
     } else {
@@ -218,12 +220,14 @@ class HScrollbar {
     else spos = newspos;
     //serial send 
          if (oldpos != spos) 
-          {   
-             strValue = str(getValue());
+          {  
+             tmp = getValue();
+             Direction = (tmp>=0) ? "U" : "D"; 
+             strValue = str(abs(tmp));
              while(strValue.length()<3) strValue = "0" + strValue; 
-             command = str(channelName)+'U'+strValue+'\n';
-             commonCommand = command;
-             myPort.write(command); // send cannel name and value
+             command = str(channelName) + Direction + strValue + '\n';
+             commonCommand = command; //send to display
+             myPort.write(command); // send cannel name, direction and value
              oldpos = spos;
           }
   }
