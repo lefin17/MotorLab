@@ -1,5 +1,6 @@
 import processing.serial.*;
-
+Btn b; //small button
+Model M;
 HScrollbar hs1, hs2, hs3;  // Three scrollbars
 Graph g; // object with graph of input values; (whole width)
 Param[] prm; //object with params to show, record calculate
@@ -23,7 +24,8 @@ void setup() {
   commonCommand = "";
   inString = "";
   prm = new Param[3];
-  
+  M = new Model();
+  b = new Btn(5, 5, 30, 20, "Start"); //inicialize button 
   hs1 = new HScrollbar(0, height/2-8, width, 16, 16, true, 255, 'L');
   hs2 = new HScrollbar(0, height/2+8, width, 16, 16, true, 255, 'M');
   hs3 = new HScrollbar(0, height/2+24, width, 16,16, true, 255, 'P');
@@ -99,7 +101,8 @@ void draw() {
   stroke(0);
   line(0, height/2, width, height/2);
   line(0, height/2+16, width, height/2+16);
-  
+  b.draw();
+  M.draw();
 }
 
 class Param {
@@ -112,13 +115,33 @@ class Param {
        name = N;
        clr = C;
        }
+ 
  void putValue(float v)
    {
      value = v;
    }
-}
+} //end class Param
 
+class Model
+  {
+int mode=0; // process mode (swiching by buttons)
 
+    Model()
+     {
+     }
+     
+    void draw()
+       {
+           fill(0);
+           text(mode+"--",50,100);
+       }
+ 
+  }// end Model class
 
+void mousePressed()
+{
+  //buttons actions
+  if (b.mousePressed()) M.mode = 1;
+} 
 
   
