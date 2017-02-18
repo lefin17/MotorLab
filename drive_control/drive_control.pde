@@ -1,4 +1,5 @@
 import processing.serial.*;
+
 Btn b; //small button
 Model M;
 HScrollbar hs1, hs2, hs3;  // Three scrollbars
@@ -72,10 +73,10 @@ void draw() {
 
   fill(255);
   // by logic we need to change param of model param, not send direct command
-    M.in[0] = hs1.update(); // out(cmd); //commands from three scrollbar will be send to controller
-    M.in[1] = hs2.update();         
-    M.in[2] = hs3.update();      
-   M.update();
+    if (hs1.update()) M.in[0] = hs1.getValue(); // out(cmd); //commands from three scrollbar will be send to controller
+    if (hs2.update()) M.in[1] = hs2.getValue();         
+    if (hs3.update()) M.in[2] = hs3.getValue();      
+   M.update(); //model update 
   hs1.display();
   hs2.display();
   hs3.display();

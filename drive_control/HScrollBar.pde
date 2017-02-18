@@ -31,8 +31,8 @@ HScrollbar (float xp, float yp, int sw, int sh, int l, boolean s, int mV, char n
     
   }
 
-  int update() {
-    
+  boolean update() {
+    boolean active = false;
     String command = "";
     String  strValue = "";
    
@@ -56,17 +56,18 @@ HScrollbar (float xp, float yp, int sw, int sh, int l, boolean s, int mV, char n
       spos = spos + (newspos-spos)/loose;
     }
     else spos = newspos;
-    //serial send 
-   /*      if (oldpos != spos) 
-          {  */ 
-             tmp = getValue();
-           /*  Direction = (tmp>=0) ? "U" : "D"; //Up & Down
-             strValue = str(abs(tmp));  
-             while(strValue.length()<3) strValue = "0" + strValue; 
-             command = str(channelName) + Direction + strValue + '\n';
+    
+        if (oldpos != spos) 
+          {  
+           //  tmp = getValue();
+           //  Direction = (tmp>=0) ? "U" : "D"; //Up & Down
+           //  strValue = str(abs(tmp));  
+           //  while(strValue.length()<3) strValue = "0" + strValue; 
+           //  command = str(channelName) + Direction + strValue + '\n';
+             active = true;
              oldpos = spos;
-          } */
-    return tmp;
+          } 
+    return active;
   }
 
   float constrain(float val, float minv, float maxv) {
