@@ -33,15 +33,9 @@ HScrollbar (float xp, float yp, int sw, int sh, int l, boolean s, int mV, char n
 
   boolean update() {
     boolean active = false;
-    String command = "";
-    String  strValue = "";
-   
-    int tmp;
-    if (overEvent()) {
-      over = true;
-    } else {
-      over = false;
-    }
+  
+    over = (overEvent()) ?  true : false;
+  
     if (mousePressed && over) {
       locked = true;
     }
@@ -59,11 +53,6 @@ HScrollbar (float xp, float yp, int sw, int sh, int l, boolean s, int mV, char n
     
         if (oldpos != spos) 
           {  
-           //  tmp = getValue();
-           //  Direction = (tmp>=0) ? "U" : "D"; //Up & Down
-           //  strValue = str(abs(tmp));  
-           //  while(strValue.length()<3) strValue = "0" + strValue; 
-           //  command = str(channelName) + Direction + strValue + '\n';
              active = true;
              oldpos = spos;
           } 
