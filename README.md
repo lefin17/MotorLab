@@ -1,7 +1,11 @@
 Change to processing for using opeb libraries and powerful of DB storage and analisys
 
 # MotorLab
-Arduino &amp; android application for research of opposite motor possibilities. 
+Arduino &amp; processing application for research hydraulic equipment. 
+2017-02-18
+- Now it become to work with laboratory stand which include axial pump, hydromotor and hydrocylinder.
+- Feedback by resistance
+- now try to make manual control of system.
 
 2016-07-29 - Ideas
 # UI (Android app) 
