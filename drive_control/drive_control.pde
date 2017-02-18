@@ -6,9 +6,7 @@ Graph g; // object with graph of input values; (whole width)
 Param[] prm; //object with params to show, record calculate
 String commonCommand; 
 Serial myPort;
-//possible to update scroll bar only when needed.. (only if last value not equal current one)
-// 2017-01-26 
-//http://pastebin.com/kSrU3nVH - here graph can be taken
+
 PFont f;
 
 int lf = 13;      // ASCII linefeed 
@@ -29,8 +27,8 @@ void setup() {
   hs1 = new HScrollbar(0, height/2-8, width, 16, 16, true, 255, 'L');
   hs2 = new HScrollbar(0, height/2+8, width, 16, 16, true, 255, 'M');
   hs3 = new HScrollbar(0, height/2+24, width, 16,16, true, 255, 'P');
-  int yMin_g = round(height/2+30);
-  g = new Graph(yMin_g, height, color(0), color(255), false, 1024); //new graph   
+  // int yMin_g = round();
+  g = new Graph(height/2+30, height, color(0), color(255), false, 1024); //new graph   
   
   prm[0] = new Param("Pump", color(255, 0, 0));
   prm[1] = new Param("Linear", color(0, 255, 0));
@@ -71,11 +69,13 @@ void serialEvent(Serial p) {
 } 
 
 void draw() {
+
   fill(255);
- 
-  hs1.update();
-  hs2.update();
-  hs3.update();
+  // by logic we need to change param of model param, not send direct command
+    M.in[0] = hs1.update(); // out(cmd); //commands from three scrollbar will be send to controller
+    M.in[1] = hs2.update();         
+    M.in[2] = hs3.update();      
+   M.update();
   hs1.display();
   hs2.display();
   hs3.display();
@@ -105,11 +105,14 @@ void draw() {
   M.draw();
 }
 
+
+
 class Param {
   String name;
   float value;
   color clr; 
- 
+  
+  
   Param(String N, color C)
      {
        name = N;
@@ -122,26 +125,11 @@ class Param {
    }
 } //end class Param
 
-class Model
-  {
-int mode=0; // process mode (swiching by buttons)
-
-    Model()
-     {
-     }
-     
-    void draw()
-       {
-           fill(0);
-           text(mode+"--",50,100);
-       }
- 
-  }// end Model class
 
 void mousePressed()
 {
   //buttons actions
-  if (b.mousePressed()) M.mode = 1;
+  if (b.mousePressed()) M.changeMode();
 } 
 
   

@@ -10,7 +10,7 @@ class HScrollbar {
   int maxValue; //maximum value
   float ratio;
   char channelName;
-
+  String Direction; 
 
 HScrollbar (float xp, float yp, int sw, int sh, int l, boolean s, int mV, char name) {
     swidth = sw;
@@ -28,12 +28,14 @@ HScrollbar (float xp, float yp, int sw, int sh, int l, boolean s, int mV, char n
     maxValue = mV;
     simetrical = s;
     channelName = name;
+    
   }
 
-  void update() {
+  int update() {
+    
     String command = "";
     String  strValue = "";
-    String Direction = "";
+   
     int tmp;
     if (overEvent()) {
       over = true;
@@ -55,17 +57,16 @@ HScrollbar (float xp, float yp, int sw, int sh, int l, boolean s, int mV, char n
     }
     else spos = newspos;
     //serial send 
-         if (oldpos != spos) 
-          {  
+   /*      if (oldpos != spos) 
+          {  */ 
              tmp = getValue();
-             Direction = (tmp>=0) ? "U" : "D"; //Up & Down
-             strValue = str(abs(tmp));
+           /*  Direction = (tmp>=0) ? "U" : "D"; //Up & Down
+             strValue = str(abs(tmp));  
              while(strValue.length()<3) strValue = "0" + strValue; 
              command = str(channelName) + Direction + strValue + '\n';
-             commonCommand = command; //send to display
-             myPort.write(command); // send cannel name, direction and value
              oldpos = spos;
-          }
+          } */
+    return tmp;
   }
 
   float constrain(float val, float minv, float maxv) {
