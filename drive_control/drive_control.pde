@@ -1,12 +1,15 @@
 import processing.serial.*;
 
-Btn b; //small button
+Btn b, br, bs; //small button
 Model M;
+RecordResult R;
 HScrollbar hs1, hs2, hs3;  // Three scrollbars
 Graph g; // object with graph of input values; (whole width)
 Param[] prm; //object with params to show, record calculate
 String commonCommand; 
 Serial myPort;
+
+Table logFile;
 
 PFont f;
 
@@ -22,9 +25,17 @@ void setup() {
   background(255);
   commonCommand = "";
   inString = "";
+  logFile = new Table();
+  logFile.addColumn("time");
+  logFile.addColumn("Command");
+  
   prm = new Param[3];
   M = new Model();
-  b = new Btn(5, 5, 30, 20, "Start"); //inicialize button 
+  R = new RecordResult(); //table with results 
+  b = new Btn(5, 5, 30, 20, "Start"); //inicialize button
+  bs = new Btn(5, 25, 30, 20, "Start Record"); //inicialize get record experiment
+  br = new Btn(5, 50, 30, 20, "Record"); //inicialize result record and stop experiment  
+  
   hs1 = new HScrollbar(0, height/2-8, width, 16, 16, true, 255, 'L');
   hs2 = new HScrollbar(0, height/2+8, width, 16, 16, true, 255, 'M');
   hs3 = new HScrollbar(0, height/2+24, width, 16,16, true, 255, 'P');
@@ -73,7 +84,11 @@ void draw() {
 
   fill(255);
   // by logic we need to change param of model param, not send direct command
-    if (hs1.update()) M.in[0] = hs1.getValue(); // out(cmd); //commands from three scrollbar will be send to controller
+    if (hs1.update()) 
+        {
+          M.in[0] = hs1.getValue(); // out(cmd); //commands from three scrollbar will be send to controller
+          
+        }
     if (hs2.update()) M.in[1] = hs2.getValue();         
     if (hs3.update()) M.in[2] = hs3.getValue();      
    M.update(); //model update 
@@ -103,7 +118,16 @@ void draw() {
   line(0, height/2, width, height/2);
   line(0, height/2+16, width, height/2+16);
   b.draw();
+  bs.draw(); //buttonStartRecordOfResults
+  br.draw(); //buttonWriteResultsAndStopRecord
+  
   M.draw();
+  int tmp = 0;
+  R.AddRowToResult(M.out[0].value, 
+                   M.out[1].value, 
+                   M.out[2].value, 
+                   tmp, tmp, tmp, tmp, tmp, tmp, 
+                   tmp, tmp, tmp)
 }
 
 
@@ -131,6 +155,10 @@ void mousePressed()
 {
   //buttons actions
   if (b.mousePressed()) M.changeMode();
+  
+  //control of experiment recording;
+  if (bs.mousePressed()) R.StartRecord();
+  if (br.mousePressed()) R.SaveResult();
 } 
 
   
