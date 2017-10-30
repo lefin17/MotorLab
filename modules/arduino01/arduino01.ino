@@ -3,6 +3,9 @@
 M - motor drive 
 L - linear hydraulic driver
 P - pump station
+
+2017-10-30
+Try to add load.
  */
 
 const int MsIn = A0;  // Analog input pin that the potentiometer is attached to
@@ -11,6 +14,7 @@ const int PsIn = A2;
 
 const int Pp1In = A3; //pressure after the pump
 const int Pp2In = A4; //pressure before the pump
+const int Pp3In = A5; //pressure load (try on three and add more if needed)
 
 //constants for driver motors
 const int Mout1 = 9; 
